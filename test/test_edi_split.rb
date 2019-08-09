@@ -20,19 +20,21 @@ include EDI::E
 class TestClass < Test::Unit::TestCase
 
   def test_cde_sep
-    assert_equal(['a','b'], edi_split('a:b', ?:, ??) ) 
-    assert_equal(['a:b'],   edi_split('a?:b', ?:, ??) ) 
-    assert_equal(['a?','b'],edi_split('a??:b', ?:, ??) ) 
-    assert_equal(['a?:b'],  edi_split('a???:b', ?:, ??) ) 
+    assert_equal(['a','b'], edi_split('a:b', ?:, ??) )
+    assert_equal(['a?:b'],   edi_split('a?:b', ?:, ??) )
+    assert_equal(['a??','b'],edi_split('a??:b', ?:, ??) )
+    assert_equal(['a???:b'],  edi_split('a???:b', ?:, ??) )
+    assert_equal(['a????', 'b'],  edi_split('a????:b', ?:, ??) )
+    assert_equal(['a?????:b'],  edi_split('a?????:b', ?:, ??) )
     assert_raise( EDISyntaxError) { edi_split('a:b?', ?:, ??)}
 
-    assert_equal(['a','', 'b'],     edi_split('a::b', ?:, ??) ) 
-    assert_equal(['a','', '', 'b'], edi_split('a:::b', ?:, ??) ) 
-    assert_equal(['a','b'],         edi_split('a:b:', ?:, ??) ) 
-    assert_equal(['a','', 'b'],     edi_split('a::b::', ?:, ??) ) 
+    assert_equal(['a','', 'b'],     edi_split('a::b', ?:, ??) )
+    assert_equal(['a','', '', 'b'], edi_split('a:::b', ?:, ??) )
+    assert_equal(['a','b'],         edi_split('a:b:', ?:, ??) )
+    assert_equal(['a','', 'b'],     edi_split('a::b::', ?:, ??) )
 
-    assert_equal(['','a','b'],            edi_split(':a:b', ?:, ??) ) 
-    assert_equal(['','','', 'a','', 'b'], edi_split(':::a::b::', ?:, ??) ) 
+    assert_equal(['','a','b'],            edi_split(':a:b', ?:, ??) )
+    assert_equal(['','','', 'a','', 'b'], edi_split(':::a::b::', ?:, ??) )
 
     assert_equal( ['123456780', 'A + B LTD' ], edi_split('123456780:A + B LTD', ?:, ??) )
     assert_equal( ['', '', '', '10010099', '25', '131' ], edi_split(':::10010099:25:131', ?:, ??) )
@@ -40,9 +42,9 @@ class TestClass < Test::Unit::TestCase
 
   def test_de_sep
     assert_equal( ['IMD', 'A','', ':::JEANS'], edi_split('IMD+A++:::JEANS', ?+, ??))
-    assert_equal( ['FII', 'OR','123456780:A + B LTD', ':::10010099:25:131' ], edi_split('FII+OR+123456780:A ?+ B LTD+:::10010099:25:131', ?+, ??) )
+    assert_equal( ['FII', 'OR','123456780:A ?+ B LTD', ':::10010099:25:131' ], edi_split('FII+OR+123456780:A ?+ B LTD+:::10010099:25:131', ?+, ??) )
     assert_raise(EDISyntaxError){edi_split('TAG+SOME TEXT??+MORE TEXT+PENDING ESC! ?', ?+, ??)}
-    assert_equal( ['TAG','SOME TEXT?', 'MORE TEXT', 'PENDING ESC ?'], edi_split('TAG+SOME TEXT??+MORE TEXT+PENDING ESC ??', ?+, ??) )
+    assert_equal( ['TAG','SOME TEXT??', 'MORE TEXT', 'PENDING ESC ??'], edi_split('TAG+SOME TEXT??+MORE TEXT+PENDING ESC ??', ?+, ??) )
     assert_raise(EDISyntaxError){edi_split('TAG+SOME TEXT??+MORE TEXT+PENDING ESC! ???', ?+, ??)}
   end
 

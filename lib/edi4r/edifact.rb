@@ -104,10 +104,8 @@ module EDI::E
       escapes = count_escapes( item, e )
       if escapes & 1 == 1 # odd
         raise EDISyntaxError, "Pending escape char in #{str}" if match_at == str.length
-        (escapes/2+1).times {item.chop!} # chop off duplicate escapes
         item << s # add separator as regular character
       else # even
-        (escapes/2).times {item.chop!}  # chop off duplicate escapes
         results << item
         item = ''
       end
